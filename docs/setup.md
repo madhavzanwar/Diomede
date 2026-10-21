@@ -108,8 +108,10 @@ ORCHESTRATOR_API_KEY=your-strong-api-key-here
 ```
 
 - **`ORTHANC_PASSWORD`** — the templates in `config/orthanc/*.template.json`
-  substitute `${ORTHANC_USER}` / `${ORTHANC_PASSWORD}` at container startup, so
-  every Orthanc node shares the same credentials from this one file.
+  substitute `${ORTHANC_USER}` / `${ORTHANC_PASSWORD}` at container startup
+  (`src/utils/render_orthanc_config.py`, which JSON-escapes the values), so
+  every Orthanc node shares the same credentials from this one file. Any
+  characters are fine in the password, including `/`, `&`, `\` and `"`.
 - **`ORCHESTRATOR_API_KEY`** — required by both the Orchestrator (enforced on every
   endpoint) and the Forwarder (sent as `X-API-Key`). Both services fail fast at
   startup if it is missing.

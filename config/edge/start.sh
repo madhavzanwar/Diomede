@@ -1,18 +1,12 @@
 #!/bin/bash
 # start.sh – Edge Agent container entrypoint
-# Substitutes credentials into the Orthanc config template, then launches
+# Substitutes credentials into the Orthanc config template (JSON-escaped), then launches
 # Orthanc (DICOM receiver) and the Forwarder Daemon side-by-side.
 
 set -e
 
 echo "[start.sh] Generating Orthanc config from template..."
-python3 -c "
-import os
-t = open('/etc/orthanc/orthanc.template.json').read()
-t = t.replace('\${orthanc_user}', os.environ['ORTHANC_USER'])
-t = t.replace('\${orthanc_password}', os.environ['ORTHANC_PASSWORD'])
-open('/tmp/orthanc.json', 'w').write(t)
-"
+python3 -m src.utils.render_orthanc_config /etc/orthanc/orthanc.template.json /tmp/orthanc.json
 
 echo "[start.sh] Starting Orthanc..."
 Orthanc /tmp/orthanc.json &
